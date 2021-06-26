@@ -1,0 +1,44 @@
+{
+	"name": "nodejs-complete-guide",
+	"version": "1.0.0",
+	"description": "The project for the nodejs-complete-guide course",
+	"main": "app.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "nodemon app.js"
+	},
+	"keywords": [
+		"js",
+		"javascript",
+		"express",
+		"npm",
+		"raman",
+		"raman08"
+	],
+	"author": "Raman Preet Singh",
+	"license": "MIT",
+	"devDependencies": {
+		"eslint": "^7.25.0",
+		"nodemod": "^2.7.2"
+	},
+	"dependencies": {
+		"@forbeslindesay/tsconfig": "^2.0.0",
+		"bcryptjs": "^2.4.3",
+		"body-parser": "^1.19.0",
+		"connect-flash": "^0.1.1",
+		"connect-mongo": "^4.4.1",
+		"csurf": "^1.11.0",
+		"dotenv": "^10.0.0",
+		"express": "^4.17.1",
+		"express-session": "^1.17.1",
+		"express-validator": "^6.11.1",
+		"mongodb": "^3.6.6",
+		"mongoose": "^5.12.6",
+		"multer": "^1.4.2",
+		"nodemailer": "^6.6.1",
+		"nodemon": "^2.0.7",
+		"pdfkit": "^0.12.1",
+		"pug": "^3.0.0",
+		"stripe": "^8.150.0"
+	}
+}

@@ -1,0 +1,41 @@
+extends ../layouts/main-layout.pug
+
+block styles
+	link(rel="stylesheet", href="/css/forms.css")
+	link(rel="stylesheet", href="/css/auth.css")
+
+block content
+	main
+
+		if errorMessage
+			- error = errorMessage
+			div(class="user-message user-message--error")  #{error}
+
+		if sucessMessage
+			- message = sucessMessage
+			div(class="user-message user-message--sucess")  #{message}
+
+		- email = oldInput.email
+		- password = oldInput.password
+
+		- emailClass = validationErrors.find(e => e.param === 'email') ? 'invalid' : 's'
+		- passwordClass = validationErrors.find(e => e.param === 'password') ? 'invalid' : 's'
+
+		form.login-form(action='/login', method="POST" novalidate)
+			.form-control
+				label(for="email") Email
+				input(type="email", name="email", value=email, class=emailClass)#email
+
+			.form-control
+				label(for="password") Password
+				input(type="password", name="password", value=password, class=passwordClass)#password
+
+			- csrfToken = csrfToken
+			input(type="hidden", name="_csrf", value=csrfToken)
+
+			button.btn.btn-primary(type="submit") Login
+
+		.centered
+			a.btn.btn-primary(href="/reset") Reset Password
+
+

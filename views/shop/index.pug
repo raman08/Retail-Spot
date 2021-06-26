@@ -1,0 +1,43 @@
+extends ../layouts/main-layout.pug
+include ../mixin/add-to-cart.pug
+include ../mixin/pagination.pug
+
+block styles
+	link(rel="stylesheet", href="/css/product.css")
+
+block content
+	main
+		if products.length > 0
+			.grid
+				each product in products
+					article
+						<div class="card mb-3" style="max-width: 700px;">
+							<div class="row g-0">
+								<div class="col-md-4 my-2">
+									- var imageUrl = product.imageUrl;
+									img(src=imageUrl, alt="Book",class="img-fluid rounded-start" ,style="max-width: 200px;")
+								</div>
+								<div class="col-md-8">
+									<div class="card-body">
+										h5.card-title #{ product.title }
+										- var productDesc = product.description.split(' ').splice(0, 30).join(' ');
+										p.card-text #{ productDesc }...
+
+										h6.card-text $ #{ product.price }
+
+										.card__actions
+											- let productUrl = `/products/${product._id}`
+											a(href=productUrl).btn.btn-primary Details
+
+											if isAuthanticated
+												+addToCart(product.id)
+									</div>
+								</div>
+							</div>
+						</div>
+
+			hr
+			+pagination(currentPage, totalProducts, hasNextPage, hasPreviousPage, nextPage, previousPage, lastPage)
+
+		else
+			h1.centered No Products

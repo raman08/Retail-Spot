@@ -1,0 +1,29 @@
+include ../layouts/main-layout
+
+block styles
+	link(rel="stylesheet", href="/css/cart.css")
+
+<script src="https://js.stripe.com/v3/"></script>
+script(src="/js/checkout.js", defer)
+
+block content
+	main
+		if products.length > 0
+			ul.cart__item-list
+				each product in products
+					li.cart__item
+						h1 #{product.product.title}
+						h3 Price: #{product.product.price}
+						h2 Quantity: #{product.quantity}
+			hr
+			.centered
+				h3 Total Price: #{totalPrice}
+
+			.centered
+				- sessionId= sessionId || 'test'
+				input(type="hidden", value=sessionId, id='stripeSessionID')
+				button.btn.btn-primary(id="orderBtn") Order Now
+
+
+		else
+			h1.centered No Product to Checkout

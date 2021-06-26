@@ -1,0 +1,29 @@
+include ../layouts/main-layout
+
+block styles
+	link(rel="stylesheet", href="/css/cart.css")
+
+block content
+	main
+		if products.length > 0
+			ul.cart__item-list
+				each product in products
+					li.cart__item
+						h1 #{product.productId.title}
+						h3 Price: #{product.productId.price}
+						h2 Quantity: #{product.quantity}
+						form(action="/cart-delete-item", method="POST")
+							- productId = product.productId._id;
+							input(type="hidden", name="productId", value=productId)
+							- csrfToken = csrfToken
+							input(type="hidden", name="_csrf", value=csrfToken)
+							button.btn.danger(type="submit") Delete
+			hr
+			.centered
+				a.btn.btn-primary(href="/checkout") Order Now!
+				//- form(action="/create-order" method="POST")
+				//- 	- csrfToken = csrfToken
+				//- 	input(type="hidden", name="_csrf", value=csrfToken)
+				//- 	button.btn(type="submit") Order Now!
+		else
+			h1.centered No Product in Cart

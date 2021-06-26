@@ -1,0 +1,7 @@
+mixin addToCart(productId)
+	form(action="/cart", method="POST")
+		- csrfToken = csrfToken
+		input(type="hidden", name="_csrf", value=csrfToken)
+		input(type="hidden" name="productId" value=productId)
+
+		button.btn.btn-primary(type="submit") Add to cart

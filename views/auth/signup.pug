@@ -1,0 +1,38 @@
+extends ../layouts/main-layout.pug
+
+block styles
+	link(rel="stylesheet", href="/css/forms.css")
+	link(rel="stylesheet", href="/css/auth.css")
+
+block content
+	main
+		if errorMessage
+			- error = errorMessage
+			div(class="user-message user-message--error")  #{error}
+
+
+		- email = oldInput.email
+		- password = oldInput.password
+		- confirmPassword = oldInput.confirmPassword
+
+		- emailClass = validationErrors.find(e => e.param === 'email') ? 'invalid' : ''
+		- passwordClass = validationErrors.find(e => e.param === 'password') ? 'invalid' : ''
+		- confirmPasswordClass = validationErrors.find(e => e.param === 'confirmPassword') ? 'invalid' : ''
+
+		form.login-form(action='/signup', method="POST", novalidate)
+			.form-control
+				label(for="email") Email
+				input(type="email", name="email", value=email, class=emailClass)#email
+
+			.form-control
+				label(for="password") Password
+				input(type="password", name="password", value=password, class=passwordClass)#password
+
+			.form-control
+				label(for="confirmPassword") Confirm Password
+				input(type="password", name="confirmPassword", value=confirmPassword, class=confirmPasswordClass)#confirmPassword
+
+			- csrfToken = csrfToken
+			input(type="hidden", name="_csrf", value=csrfToken)
+
+			button.btn.btn-primary(type="submit") Sign Up

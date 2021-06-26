@@ -1,0 +1,91 @@
+doctype html
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		meta(http-equiv="X-UA-Compatible", content="IE=edge")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		title #{ title }
+		link(rel="stylesheet", href="/css/main.css")
+
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+		script(src="/js/main.js" defer)
+		block styles
+
+	body
+		.backdrop
+		header.main-header
+			button#side-menu-toggle Menu
+			nav.main-header__nav
+				ul.main-header__item-list
+
+					li.main-header__item
+						a(href="/", class=(path==='/' ? 'active' : '' )) Shop
+
+					//- li.main-header__item
+					//- 	a(href="/products", class=(path==='/products' ? 'active' : '' )) Products
+
+					-var isAuthanticated = isAuthanticated
+					if isAuthanticated
+						li.main-header__item
+							a(href="/cart", class=(path==='/cart' ? 'active' : '' )) Cart
+
+						li.main-header__item
+							a(href="/orders", class=(path==='/orders' ? 'active' : '' )) Orders
+
+
+				ul.main-header__item-list
+					if isAuthanticated
+						li.main-header__item
+							a(href="/admin/add-product", class=(path==='/admin/add-product' ? 'active' : '' )) Add Product
+
+						li.main-header__item
+							a(href="/admin/products", class=(path==='/admin/products' ? 'active' : '' )) Admin Product
+						li.main-header__item
+							form(action="/logout", method="post")
+								button(type="submit") Logout
+					else
+						li.main-header__item
+							a(href="/login", class=(path==='/login' ? 'active' : '' )) Login
+						li.main-header__item
+							a(href="/signup", class=(path==='/sighup' ? 'active' : '' )) Sign Up
+
+
+
+
+		nav.mobile-nav
+			ul.mobile-nav__item-list
+				li.mobile-nav__item
+					a(href="/", class=(path==='/' ? 'active' : '' )) Shop
+
+				li.mobile-nav__item
+					a(href="/products", class=(path==='/products' ? 'active' : '' )) Products
+
+				if isAuthanticated
+						li.main-header__item
+							a(href="/cart", class=(path==='/cart' ? 'active' : '' )) Cart
+
+						li.main-header__item
+							a(href="/orders", class=(path==='/orders' ? 'active' : '' )) Orders
+
+
+				ul.main-header__item-list
+					if isAuthanticated
+						li.main-header__item
+							a(href="/admin/add-product", class=(path==='/admin/add-product' ? 'active' : '' )) Add Product
+
+						li.main-header__item
+							a(href="/admin/products", class=(path==='/admin/products' ? 'active' : '' )) Admin Product
+						li.main-header__item
+							form(action="/logout", method="post")
+								- csrfToken = csrfToken
+								input(type="hidden", name="_csrf", value=csrfToken)
+								button(type="submit") Logout
+					else
+						li.main-header__item
+							a(href="/login", class=(path==='/login' ? 'active' : '' )) Login
+						li.main-header__item
+							a(href="/signup", class=(path==='/sighup' ? 'active' : '' )) Sign Up
+
+		block content
+

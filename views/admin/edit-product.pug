@@ -1,0 +1,51 @@
+extends ../layouts/main-layout.pug
+
+block styles
+	link(rel="stylesheet", href="/css/product.css")
+	link(rel="stylesheet", href="/css/forms.css")
+
+block content
+	main
+		if errorMessage
+			- error = errorMessage
+			div(class="user-message user-message--error")  #{error}
+
+		if sucessMessage
+			- message = sucessMessage
+			div(class="user-message user-message--sucess")  #{message}
+
+
+		- titleClass = validationErrors.find(e => e.param === 'title') ? 'invalid' : 's'
+		- imageUrlClass = validationErrors.find(e => e.param === 'imageUrl') ? 'invalid' : 's'
+		- priceClass = validationErrors.find(e => e.param === 'price') ? 'invalid' : 's'
+		- descriptionClass = validationErrors.find(e => e.param === 'description') ? 'invalid' : 's'
+
+		- action = !editing ? '/admin/add-product' : '/admin/edit-product';
+		form.product-form(action=action, method="POST", enctype="multipart/form-data")
+			.form-control
+				- title = editing || hasErrors ? product.title : '';
+				label(for="title") Title
+				input(type="text", name="title", value=title, class=titleClass)#title
+
+			.form-control
+				label(for="image") Image
+				input(type="file", name="image" )#image
+
+			.form-control
+				- price = editing || hasErrors ? product.price : '';
+				label(for="price") Price
+				input(type="number", name="price" step=0.01, value=price, class=priceClass)#price
+
+			.form-control
+				- description = editing || hasErrors ? product.description : '';
+				label(for="description") Description
+				textarea(rows=4, name="description", class=descriptionClass)#description #{description}
+
+			if editing
+				- value = product._id;
+				input(type="hidden", value=value, name='productId')
+
+			- csrfToken = csrfToken
+			input(type="hidden", name="_csrf", value=csrfToken)
+
+			button.btn.btn-primary(type="submit") #{ editing ? 'Update Product' : 'Add Product'}

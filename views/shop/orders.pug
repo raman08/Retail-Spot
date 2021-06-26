@@ -1,0 +1,25 @@
+include ../layouts/main-layout
+
+block styles
+	link(rel="stylesheet", href="/css/orders.css")
+
+block content
+	main
+		if orders.length <= 0
+			main
+				h1.centered Nothing Here
+		else
+			//- h1 Orders here
+			ul.orders
+				each order in orders
+					li.orders__item
+						h1 Order - # #{order._id}
+						ul.orders__products
+							each product in order.products
+								li.orders__products-item
+									span #{product.product.title} (#{product.quantity})
+										p Price: #{product.product.price}
+						p Total Price: #{order.orderValue}
+						- invoiveLink = `/orders/${order._id}`
+						a(href="" + invoiveLink, target="_blank") Invoice
+
