@@ -113,7 +113,7 @@ mongoose
 	.connect(MONGODB_URI, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
-		useFindAndModify: false,
+		dbName: 'Shop',
 	})
 	.then(() => {
 		app.listen(process.env.PORT || 3000, () => {

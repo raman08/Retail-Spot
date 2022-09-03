@@ -1,13 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-
 const pdfkit = require('pdfkit');
 const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 const Order = require('../models/order');
 const Product = require('../models/product');
 
-const ITEMS_PRE_PAGE = 5;
+const ITEMS_PRE_PAGE = 6;
 
 exports.getProducts = (req, res, next) => {
 	const page = parseInt(req.query.page) || 1;

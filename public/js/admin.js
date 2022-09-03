@@ -1,6 +1,8 @@
-const deleteProduct = btn => {
+// eslint-disable-next-line no-unused-vars
+function deleteProduct(btn) {
 	const productId = btn.dataset.productid;
 	const productElement = document.getElementById(`product_${productId}`);
+
 	fetch(`/admin/product/delete/${productId}`, { method: 'DELETE' })
 		.then(result => {
 			return result.json();
@@ -11,4 +13,4 @@ const deleteProduct = btn => {
 		.catch(err => {
 			console.log(err);
 		});
-};
+}

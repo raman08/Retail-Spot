@@ -1,18 +1,20 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,600;0,800;1,400;1,600;1,800&display=swap');
 
 * {
 	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
 }
 
 body {
-	padding: 0;
-	margin: 0;
-	font-family: 'Open Sans', sans-serif;
+	font-family: 'Poppins', sans-serif;
+	height: 10vh;
 }
 
 main {
 	padding: 1rem;
 	margin: auto;
+	background-color: #dfdfdf;
 }
 
 form {
@@ -25,6 +27,7 @@ form {
 
 .image {
 	height: 20rem;
+	margin: 1rem;
 }
 
 .image img {
@@ -54,6 +57,8 @@ form {
 	margin: 0;
 	padding: 0;
 	display: flex;
+	font-weight: 600;
+	font-style: italic;
 }
 
 .main-header__item {
@@ -120,13 +125,13 @@ form {
 .mobile-nav__item a:active,
 .mobile-nav__item a:hover,
 .mobile-nav__item a.active {
-	background: #00695c;
+	background-color: #366efd;
 	color: white;
 	border-radius: 3px;
 }
 
 #side-menu-toggle {
-	border: 1px solid white;
+	border: none;
 	font: inherit;
 	padding: 0.5rem;
 	display: block;
@@ -164,6 +169,7 @@ form {
 }
 
 .card {
+	background-color: #f1f1f1 !important;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 }
 
@@ -206,6 +212,7 @@ form {
 .btn {
 	display: inline-block;
 	padding: 0.25rem 1rem;
+	margin: 0.1rem;
 	text-decoration: none;
 	font: inherit;
 	border: 1px solid #00695c;
@@ -275,6 +282,7 @@ form {
 	background-color: #366efd;
 	color: white;
 }
+
 @media (min-width: 768px) {
 	.main-header__nav {
 		display: flex;

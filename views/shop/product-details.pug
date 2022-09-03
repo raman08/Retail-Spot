@@ -6,12 +6,13 @@ block content
 	main.centered(style="padding: 0 5em margin-top: 5%")
 		h1 #{ product.title }
 		hr
-		div.image
-			- let imageUrl = product.imageUrl
-			img(src=imageUrl, alt="Product Title")
-		h2 #{ product.price }
-		p(style="padding: 0 5em") #{ product.description }
+		.container(style: "max-width: 50%")
+			div.image
+				- let imageUrl = product.imageUrl
+				img(src=imageUrl, alt="Product Title")
+			h2 #{ product.price }
+			p(style="padding: 0 5em") #{ product.description }
 
-		if isAuthanticated
-			+addToCart(product._id)
+			if isAuthanticated
+				+addToCart(product._id)
 

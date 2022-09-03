@@ -15,76 +15,85 @@ html(lang="en")
 	body
 		.backdrop
 		header.main-header
-			button#side-menu-toggle Menu
+			<button id="side-menu-toggle"> 
+				<svg width="50px" height="50px" viewBox="0 0 72 72" id="emoji">
+					<g id="color"/>
+					<g id="hair"/>
+					<g id="skin"/>
+					<g id="skin-shadow"/>
+					<g id="line">
+					<line x1="16" x2="56" y1="26" y2="26" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+					<line x1="16" x2="56" y1="36" y2="36" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+					<line x1="16" x2="56" y1="46" y2="46" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+					</g>
+				</svg>
+			</button>
 			nav.main-header__nav
-				ul.main-header__item-list
+				div.main-header__item-list
 
-					li.main-header__item
+					div.main-header__item
 						a(href="/", class=(path==='/' ? 'active' : '' )) Shop
-
-					//- li.main-header__item
-					//- 	a(href="/products", class=(path==='/products' ? 'active' : '' )) Products
 
 					-var isAuthanticated = isAuthanticated
 					if isAuthanticated
-						li.main-header__item
+						div.main-header__item
 							a(href="/cart", class=(path==='/cart' ? 'active' : '' )) Cart
 
-						li.main-header__item
+						div.main-header__item
 							a(href="/orders", class=(path==='/orders' ? 'active' : '' )) Orders
 
 
-				ul.main-header__item-list
+				div.main-header__item-list
 					if isAuthanticated
-						li.main-header__item
+						div.main-header__item
 							a(href="/admin/add-product", class=(path==='/admin/add-product' ? 'active' : '' )) Add Product
 
-						li.main-header__item
+						div.main-header__item
 							a(href="/admin/products", class=(path==='/admin/products' ? 'active' : '' )) Admin Product
-						li.main-header__item
+						div.main-header__item
 							form(action="/logout", method="post")
 								button(type="submit") Logout
 					else
-						li.main-header__item
+						div.main-header__item
 							a(href="/login", class=(path==='/login' ? 'active' : '' )) Login
-						li.main-header__item
+						div.main-header__item
 							a(href="/signup", class=(path==='/sighup' ? 'active' : '' )) Sign Up
 
 
 
 
 		nav.mobile-nav
-			ul.mobile-nav__item-list
-				li.mobile-nav__item
+			div.mobile-nav__item-list
+				div.mobile-nav__item
 					a(href="/", class=(path==='/' ? 'active' : '' )) Shop
 
-				li.mobile-nav__item
+				div.mobile-nav__item
 					a(href="/products", class=(path==='/products' ? 'active' : '' )) Products
 
 				if isAuthanticated
-						li.main-header__item
+						div.main-header__item
 							a(href="/cart", class=(path==='/cart' ? 'active' : '' )) Cart
 
-						li.main-header__item
+						div.main-header__item
 							a(href="/orders", class=(path==='/orders' ? 'active' : '' )) Orders
 
 
-				ul.main-header__item-list
+				div.main-header__item-list
 					if isAuthanticated
-						li.main-header__item
+						div.main-header__item
 							a(href="/admin/add-product", class=(path==='/admin/add-product' ? 'active' : '' )) Add Product
 
-						li.main-header__item
+						div.main-header__item
 							a(href="/admin/products", class=(path==='/admin/products' ? 'active' : '' )) Admin Product
-						li.main-header__item
+						div.main-header__item
 							form(action="/logout", method="post")
 								- csrfToken = csrfToken
 								input(type="hidden", name="_csrf", value=csrfToken)
 								button(type="submit") Logout
 					else
-						li.main-header__item
+						div.main-header__item
 							a(href="/login", class=(path==='/login' ? 'active' : '' )) Login
-						li.main-header__item
+						div.main-header__item
 							a(href="/signup", class=(path==='/sighup' ? 'active' : '' )) Sign Up
 
 		block content

@@ -4,15 +4,34 @@ const User = require('../models/user');
 
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
+const { google } = require('googleapis');
 const { validationResult } = require('express-validator');
 
-const transporter = nodemailer.createTransport({
-	service: 'Gmail',
-	auth: {
-		user: process.env.AUTH_EMAIL,
-		pass: process.env.AUTH_PASSWORD,
-	},
-});
+const createTransporter = async () => {
+	const oauth2Client = new google.auth.OAuth2(
+		process.env.CLIENT_ID,
+		process.env.CLIENT_SECRET,
+		'https://developers.google.com/oauthplayground'
+	);
+
+	oauth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+	const accessToken = oauth2Client.getAccessToken();
+
+	const transporter = nodemailer.createTransport({
+		service: 'Gmail',
+		auth: {
+			// pass: process.env.AUTH_PASSWORD,
+			type: 'OAUTH2',
+			user: process.env.AUTH_EMAIL,
+			accessToken,
+			clientId: process.env.CLIENT_ID,
+			clientSecret: process.env.CLIENT_SECRET,
+			refreshToken: process.env.REFRESH_TOKEN,
+		},
+	});
+
+	return transporter;
+};
 
 exports.getLogin = (req, res) => {
 	let errorMessage = req.flash('error');
@@ -109,7 +128,7 @@ exports.postLogin = (req, res, next) => {
 						validationErrors: [],
 					});
 				})
-				.catch(err => {
+				.catch(() => {
 					return res.status(500).render('auth/login', {
 						path: '/login',
 						title: 'Login',
@@ -161,7 +180,7 @@ exports.postSignup = (req, res) => {
 
 			return newUser.save();
 		})
-		.then(() => {
+		.then(async () => {
 			req.flash('sucess', 'Account Created Sucessfully!!');
 			res.redirect('/login');
 
@@ -172,7 +191,9 @@ exports.postSignup = (req, res) => {
 				html: '<h1>Sign Up sucessfully!!!</h1>',
 			};
 
-			transporter
+			const transporter = await createTransporter();
+
+			return transporter
 				.sendMail(mailOptions)
 				.then(() => {
 					console.log('Mail send sucessfully');
@@ -182,7 +203,7 @@ exports.postSignup = (req, res) => {
 				});
 		})
 		.catch(() => {
-			return res.status(422).render('auth/signup', {
+			return res.status(500).render('auth/signup', {
 				path: '/signup',
 				title: 'Sign Up',
 				errorMessage: 'Somthing Went Wrong!!',
@@ -241,7 +262,7 @@ exports.postReset = (req, res, next) => {
 				user.resetTokenExpire = Date.now() + 3600000;
 				return user.save();
 			})
-			.then(() => {
+			.then(async () => {
 				req.flash('sucess', 'Check Your Email for the next steps!');
 				res.redirect('/login');
 
@@ -251,14 +272,19 @@ exports.postReset = (req, res, next) => {
 					subject: 'Reset Password',
 					html: `
 					<h3>You requested a password reset for you account</h3>
-					<p>Click this <a href='http://localhost:3000/reset/${token}'>link</a> to continue.</p>
+					<p>Click this <a href='${req.get(
+						'host'
+					)}/reset/${token}'>link</a> to continue.</p>
+					<p>${req.header('host')}/reset/${token}</p>
 					`,
 				};
+
+				const transporter = await createTransporter();
 
 				return transporter
 					.sendMail(mailOptions)
 					.then(() => {
-						console.log('Mail Send Sucessfully');
+						console.log('Reset Mail Send Sucessfully');
 					})
 					.catch(err => {
 						throw err;
@@ -327,9 +353,29 @@ exports.postResetPassword = (req, res, next) => {
 
 			return user.save();
 		})
-		.then(() => {
+		.then(async () => {
 			req.flash('sucess', 'Password Changed Sucessfully!');
 			res.redirect('/login');
+
+			const mailOptions = {
+				from: 'nodeshopdevil08@gmail.com',
+				to: req.body.email,
+				subject: 'Password Reset Sucessfully!!!',
+				html: `
+					<h3>You Password has been sucessfully changed</h3>
+					`,
+			};
+
+			const transporter = await createTransporter();
+
+			return transporter
+				.sendMail(mailOptions)
+				.then(() => {
+					console.log('Reset Mail Send Sucessfully');
+				})
+				.catch(err => {
+					throw err;
+				});
 		})
 		.catch(err => {
 			const error = new Error(err);

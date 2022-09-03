@@ -32,6 +32,7 @@
 		"express": "^4.17.1",
 		"express-session": "^1.17.1",
 		"express-validator": "^6.11.1",
+		"googleapis": "^107.0.0",
 		"mongodb": "^3.6.6",
 		"mongoose": "^5.12.6",
 		"multer": "^1.4.2",
