@@ -1,6 +1,11 @@
+const { Buffer } = require('buffer');
+const fs = require('fs');
+const path = require('path');
+
 const pdfkit = require('pdfkit');
 const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
+const { createTransporter } = require('../utils/mailUtils');
 const Order = require('../models/order');
 const Product = require('../models/product');
 
@@ -176,8 +181,25 @@ exports.getCheckoutSuccess = (req, res, next) => {
 		.then(() => {
 			req.user.clearCart();
 		})
-		.then(() => {
+		.then(async () => {
 			res.redirect('/orders');
+			const mailOptions = {
+				from: 'nodeshopdevil08@gmail.com',
+				to: req.user.email,
+				subject: `Order has been succesfull`,
+				html: `<p>Dear User, Your order has been sucessfully placed</p>`,
+			};
+
+			const transporter = await createTransporter();
+
+			return transporter
+				.sendMail(mailOptions)
+				.then(() => {
+					console.log('Mail send sucessfully');
+				})
+				.catch(err => {
+					throw err;
+				});
 		})
 		.catch(err => {
 			const error = new Error(err);
@@ -274,38 +296,42 @@ exports.getCheckout = (req, res, next) => {
 exports.getInvoice = (req, res, next) => {
 	const orderId = req.params.orderId;
 	const invoiceName = `Invoice-${orderId}.pdf`;
-	// const invoicePath = path.join('Data', 'Invoices', invoiceName);
+
+	const invoicePath = path.join(
+		__dirname,
+		'..',
+		'/images/',
+		'Invoices',
+		invoiceName
+	);
 
 	Order.findById(orderId)
-		.then(order => {
+		.then(async order => {
 			if (!order) {
 				return next(new Error('No order Found'));
 			}
+
 			if (order.user.userId.toString() !== req.user._id.toString()) {
 				return next(new Error('Unatherized Acess'));
 			}
 
 			const invoicePdf = new pdfkit();
 
-			res.setHeader('Content-Type', 'application/pdf');
-			res.setHeader(
-				'Content-Disposition',
-				`inline; filename=${invoiceName}`
-			);
+			console.log('Started Generating Pdf');
 
-			// invoicePdf.pipe(fs.createWriteStream(invoicePath));
-			invoicePdf.pipe(res);
+			invoicePdf.pipe(fs.createWriteStream(invoicePath));
+			// invoicePdf.pipe(res);
 
 			invoicePdf.fontSize(22).text('Invoice', { align: 'center' });
-			invoicePdf
-				.fontSize(14)
-				.text('_________________________________', { align: 'center' });
+			invoicePdf.fontSize(14).text('_________________________________', {
+				align: 'center',
+			});
 
 			invoicePdf.fontSize(10).text(' ', { align: 'center' });
 
 			invoicePdf
 				.fontSize(16)
-				.text(`User: ${order.user.email}`, { align: 'right' });
+				.text(`User: ${order.user.email}`, { align: 'left' });
 
 			invoicePdf.fontSize(24).text(' ', { align: 'center' });
 
@@ -321,15 +347,62 @@ exports.getInvoice = (req, res, next) => {
 
 			invoicePdf.fontSize(24).text(' ', { align: 'center' });
 
-			invoicePdf
-				.fontSize(10)
-				.text('_________________________________', { align: 'left' });
+			invoicePdf.fontSize(10).text('_________________________________', {
+				align: 'left',
+			});
 
 			invoicePdf.fontSize(9).text(' ', { align: 'center' });
 
 			invoicePdf.fontSize(20).text(`Total: $${order.orderValue}`);
 
 			invoicePdf.end();
+
+			res.setHeader('Content-Type', 'application/pdf');
+			res.setHeader(
+				'Content-Disposition',
+				`inline; filename=${invoiceName}`
+			);
+
+			const options = {
+				root: path.join(__dirname, '..', '/images/', 'Invoices'),
+				dotfiles: 'deny',
+				headers: {
+					'x-timestamp': Date.now(),
+					'x-sent': true,
+				},
+			};
+
+			res.sendFile(invoiceName, options, function (err) {
+				if (err) {
+					throw err;
+				} else {
+					console.log('Sent:', invoiceName);
+				}
+			});
+
+			const mailOptions = {
+				from: 'nodeshopdevil08@gmail.com',
+				to: req.user.email,
+				subject: `Order Invoice for Order No: ${orderId}`,
+				html: `<p>Dear User please find the invode for the order id ${orderId}</p>`,
+				attachments: [{ path: invoicePath }],
+			};
+
+			const transporter = await createTransporter();
+
+			return transporter
+				.sendMail(mailOptions)
+				.then(() => {
+					console.log('Mail send sucessfully');
+				})
+				.catch(err => {
+					throw err;
+				});
+
+			// fs.unlink(invoicePath, () => {
+			// 	// if(err) throw err;
+			// 	console.log('File Deleted sucessfully');
+			// })
 		})
 		.catch(err => {
 			next(err);

@@ -19,7 +19,7 @@ block content
 								li.orders__products-item
 									span #{product.product.title} (#{product.quantity})
 										p Price: #{product.product.price}
-						p Total Price: #{order.orderValue}
+						p Total Price: $#{order.orderValue}
 						- invoiveLink = `/orders/${order._id}`
 						a(href="" + invoiveLink, target="_blank") Invoice
 
