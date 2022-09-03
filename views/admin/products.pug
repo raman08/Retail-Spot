@@ -13,30 +13,50 @@ block content
 
 					article(id=`product_${productId}`)
 
-						<div class="card mb-3" style="max-width: 700px;">
-							<div class="row g-0">
-								<div class="col-md-4 my-2">
-									- var imageUrl = product.imageUrl;
-									img(src=imageUrl, alt="Book",class="img-fluid rounded-start" ,style="max-width: 200px;")
-								</div>
-								<div class="col-md-8">
-									<div class="card-body">
-										h5.card-title #{ product.title }
-										- var productDesc = product.description.split(' ').splice(0, 30).join(' ');
-										p.card-text #{ productDesc }...
+						<div class="card mb-3" style="max-width: 500px;">
+							<div class="m-3" style="display: flex; justify-content: center; align-items: center; max-height:300px;">
+								- var imageUrl = product.imageUrl;
+								img(src=imageUrl, alt="Book",class="card-img-top" ,style="max-width: 200px; max-height: 300px; object-fit: contain;")
+							</div>
+							<div class="card-body">
+								h5.card-title #{ product.title }
+								- var productDesc = product.description.split(' ').splice(0, 30).join(' ');
+								p.card-text #{ productDesc }...
 
-										h6.card-text $ #{ product.price }
+								h6.card-text $ #{ product.price }
 
-										.card__actions
-											- editLink = `/admin/edit-product/` + product._id + '?edit=true';
-											a(href=editLink).btn.btn-primary Edit
+								.card__actions
+									- editLink = `/admin/edit-product/` + product._id + '?edit=true';
+									a(href=editLink).btn.btn-primary Edit
 
-											input(type='hidden', value = productId, name="productId")
-											button.btn.danger(type='button', onclick='deleteProduct(this)', data-productId=productId) Delete
-									</div>
-								</div>
+									input(type='hidden', value = productId, name="productId")
+									button.btn.danger(type='button', onclick='deleteProduct(this)', data-productId=productId) Delete
 							</div>
 						</div>
+
+
+
+						// article.card-group
+						// 	<div class="card mb-3" style="max-width: 500px;">
+						// 		<div class="m-3" style="display: flex; justify-content: center; align-items: center; max-height:300px;">
+						// 			- var imageUrl = product.imageUrl;
+						// 			img(src=imageUrl, alt="Book",class="card-img-top" ,style="max-width: 200px; max-height: 300px; object-fit: contain;")
+						// 		</div>
+						// 		<div class="card-body">
+						// 			h5.card-title #{ product.title }
+						// 			- var productDesc = product.description.split(' ').splice(0, 30).join(' ');
+						// 			p.card-text #{ productDesc }...
+						//
+						// 			h6.card-text $ #{ product.price }
+						//
+						// 			.card__actions
+						// 				- let productUrl = `/products/${product._id}`
+						// 				a(href=productUrl).btn.btn-primary Details
+						//
+						// 				if isAuthanticated
+						// 					+addToCart(product.id)
+						// 		</div>
+						// 	</div>
 
 
 		else
