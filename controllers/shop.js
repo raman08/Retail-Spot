@@ -205,6 +205,7 @@ exports.getOrders = (req, res, next) => {
 exports.getCheckout = (req, res, next) => {
 	let totalPrice = 0;
 	let products;
+
 	req.user
 		.populate('cart.products.productId', 'title price description')
 		.execPopulate()
@@ -235,13 +236,17 @@ exports.getCheckout = (req, res, next) => {
 				payment_method_types: ['card'],
 				line_items: products.map(p => {
 					return {
-						name: p.product.title,
-						description: p.product.description,
-						amount: p.product.price * 100,
-						currency: 'usd',
+						price_data: {
+							unit_amount: p.product.price * 100,
+							currency: 'usd',
+							product_data: {
+								name: p.product.title,
+							},
+						},
 						quantity: p.quantity,
 					};
 				}),
+				mode: 'payment',
 				success_url: `${req.protocol}://${req.get(
 					'host'
 				)}/checkout/success`,
@@ -310,7 +315,7 @@ exports.getInvoice = (req, res, next) => {
 					.text(
 						`${index + 1}. ${prod.product.title} (${
 							prod.quantity
-						}) - \$${prod.product.price}`
+						}) - $${prod.product.price}`
 					);
 			});
 
@@ -322,7 +327,7 @@ exports.getInvoice = (req, res, next) => {
 
 			invoicePdf.fontSize(9).text(' ', { align: 'center' });
 
-			invoicePdf.fontSize(20).text(`Total: \$${order.orderValue}`);
+			invoicePdf.fontSize(20).text(`Total: $${order.orderValue}`);
 
 			invoicePdf.end();
 		})

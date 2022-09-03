@@ -272,10 +272,10 @@ exports.postReset = (req, res, next) => {
 					subject: 'Reset Password',
 					html: `
 					<h3>You requested a password reset for you account</h3>
-					<p>Click this <a href='${req.get(
+					<p>Click this <a href='${req.protocol}://${req.get(
 						'host'
 					)}/reset/${token}'>link</a> to continue.</p>
-					<p>${req.header('host')}/reset/${token}</p>
+					<p>${req.protocol}://${req.get('host')}/reset/${token}</p>
 					`,
 				};
 
