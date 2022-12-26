@@ -1,4 +1,4 @@
-# Online-Retail-Store
+# Retail Spot
 
 ### This is a online retail shop made with nodejs, express and pug template engine
 
